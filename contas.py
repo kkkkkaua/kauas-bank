@@ -13,10 +13,10 @@ class Conta:
 
     def __str__(self):
         if self._moeda == 'real':
-            return f'Cliente: {self.nome}, Numero: {self.formata_numero(self._numero)}, Bandeira: {self.bandeira}, ' \
+            return f'Cliente: {self.nome}, Numero: {self.formata_numero(self.numero)}, Bandeira: {self.bandeira}, ' \
                    f'Saldo: R${self.saldo}, Limite: R${self.limite}, Agência: {self.agencia}'
         else:
-            return f'Cliente: {self.nome}, Numero: {self.formata_numero(self._numero)}, Bandeira: {self.bandeira}, ' \
+            return f'Cliente: {self.nome}, Numero: {self.formata_numero(self.numero)}, Bandeira: {self.bandeira}, ' \
                    f'Saldo: ${self.saldo}, Limite: ${self.limite}, Agência: {self.agencia}'
 
     def __eq__(self, other):
@@ -52,10 +52,6 @@ class Conta:
     @property
     def moeda(self):
         return self._moeda
-
-    @moeda.setter
-    def moeda(self, new_moeda):
-        self._moeda = new_moeda
 
     @staticmethod
     def formata_nome(nome):
