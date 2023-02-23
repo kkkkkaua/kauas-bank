@@ -110,7 +110,18 @@ class Conta:
 
     def transferir_para_outra_conta(self, conta, valor):
         if self.sacar_da_conta(valor):
-            conta.depositar_na_conta(valor)
+            if conta.moeda == 'real' and self.moeda == 'real':
+                conta.depositar_na_conta(valor)
+            elif conta.moeda == 'dolar' and self.moeda == 'dolar':
+                conta.depositar_na_conta(valor)
+            elif conta.moeda == 'dolar' and self.moeda == 'real':
+                r = requests.get('https://economia.awesomeapi.com.br/last/USD-BRL')
+                valor_dolar = float(r.json()['USDBRL']['bid'])
+                conta.depositar_na_conta(round(valor/valor_dolar))
+            elif conta.moeda == 'real' and self.moeda == 'dolar':
+                r = requests.get('https://economia.awesomeapi.com.br/last/BRL-USD')
+                valor_real_em_dolar = float(r.json()['BRLUSD']['bid'])
+                conta.depositar_na_conta(round(valor/valor_real_em_dolar))
         else:
             raise ValueError('Não foi possivel realizar a transação.')
 
@@ -137,6 +148,3 @@ class Conta:
             self.mostra_o_saldo()
         else:
             raise ValueError('O saldo já está em reais.')
-
-
-kaua = Conta('      KAUA matos', 4444444444444444, 200)
