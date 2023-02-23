@@ -5,7 +5,7 @@ class Conta:
     def __init__(self, nome, numero, saldo=0, limite=1000):
         self._nome = self.formata_nome(nome.lower())
         self._numero = str(numero)
-        self._bandeira = self.define_bandeira(self._numero)
+        self._bandeira = self.valida_numero(self.numero)
         self._saldo = saldo
         self._limite = limite
         self._agencia = 20
@@ -71,7 +71,7 @@ class Conta:
         return f'{primeira_parte} {segunda_parte} {terceira_parte} {quarta_parte}'
 
     @staticmethod
-    def define_bandeira(numero):
+    def valida_numero(numero):
         numeros_validos = [14, 15, 16]
         if numero[0] == '3' and len(numero) in numeros_validos:
             return 'American Express'
