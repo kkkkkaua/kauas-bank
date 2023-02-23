@@ -3,7 +3,7 @@ import requests
 
 class Conta:
     def __init__(self, nome, numero, saldo=0, limite=1000):
-        self._nome = self.formata_nome(nome)
+        self._nome = self.formata_nome(nome.lower())
         self._numero = str(numero)
         self._bandeira = self.define_bandeira(self._numero)
         self._saldo = saldo
@@ -14,10 +14,10 @@ class Conta:
     def __str__(self):
         if self._moeda == 'real':
             return f'Cliente: {self.nome}, Numero: {self.formata_numero(self._numero)}, Bandeira: {self.bandeira}, ' \
-                   f'Saldo: R${self.saldo}, Limite: {self.limite}, Agência: {self.agencia}'
+                   f'Saldo: R${self.saldo}, Limite: R${self.limite}, Agência: {self.agencia}'
         else:
             return f'Cliente: {self.nome}, Numero: {self.formata_numero(self._numero)}, Bandeira: {self.bandeira}, ' \
-                   f'Saldo: ${self.saldo}, Limite: {self.limite}, Agência: {self.agencia}'
+                   f'Saldo: ${self.saldo}, Limite: ${self.limite}, Agência: {self.agencia}'
 
     def __eq__(self, other):
         if self.numero == other.numero:
@@ -52,6 +52,10 @@ class Conta:
     @property
     def moeda(self):
         return self._moeda
+
+    @moeda.setter
+    def moeda(self, new_moeda):
+        self._moeda = new_moeda
 
     @staticmethod
     def formata_nome(nome):
@@ -115,6 +119,7 @@ class Conta:
         valor_real_em_dolar = float(r.json()['BRLUSD']['bid'])
         if self.moeda == 'real':
             self._saldo = round(self.saldo * valor_real_em_dolar)
+            self._limite = round(self._limite * valor_real_em_dolar)
             self._moeda = 'dolar'
             print(f'Saldo da conta convertido para doláres!')
             self.mostra_o_saldo()
@@ -126,8 +131,12 @@ class Conta:
         valor_dolar = float(r.json()['USDBRL']['bid'])
         if self._moeda == 'dolar':
             self._saldo = round(self.saldo * valor_dolar)
+            self._limite = round(self._limite * valor_dolar)
             self._moeda = 'real'
             print(f'Saldo da conta convertido para reais!')
             self.mostra_o_saldo()
         else:
             raise ValueError('O saldo já está em reais.')
+
+
+kaua = Conta('      KAUA matos', 4444444444444444, 200)
