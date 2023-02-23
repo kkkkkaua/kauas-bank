@@ -106,9 +106,7 @@ class Conta:
 
     def transferir_para_outra_conta(self, conta, valor):
         if self.sacar_da_conta(valor):
-            if conta.moeda == 'real' and self.moeda == 'real':
-                conta.depositar_na_conta(valor)
-            elif conta.moeda == 'dolar' and self.moeda == 'dolar':
+            if conta.moeda == self.moeda:
                 conta.depositar_na_conta(valor)
             elif conta.moeda == 'dolar' and self.moeda == 'real':
                 r = requests.get('https://economia.awesomeapi.com.br/last/USD-BRL')
