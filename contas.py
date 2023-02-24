@@ -120,26 +120,38 @@ class Conta:
         else:
             raise ValueError('Não foi possivel realizar a transação.')
 
-    def transformar_saldo_de_real_para_dolar(self):
-        r = requests.get('https://economia.awesomeapi.com.br/last/BRL-USD')
-        valor_real_em_dolar = float(r.json()['BRLUSD']['bid'])
+    def troca_moeda(self):
         if self.moeda == 'real':
-            self._saldo = round(self.saldo * valor_real_em_dolar)
-            self._limite = round(self._limite * valor_real_em_dolar)
             self._moeda = 'dolar'
             print(f'Saldo da conta convertido para doláres!')
+        else:
+            self._moeda = 'real'
+            print(f'Saldo da conta convertido para reais!')
+
+    def muda_saldo_e_limite(self):
+        if self.moeda == 'real':
+            r = requests.get('https://economia.awesomeapi.com.br/last/BRL-USD')
+            valor_real_em_dolar = float(r.json()['BRLUSD']['bid'])
+            self._saldo = round(self.saldo * valor_real_em_dolar)
+            self._limite = round(self._limite * valor_real_em_dolar)
+        elif self.moeda == 'dolar':
+            r = requests.get('https://economia.awesomeapi.com.br/last/USD-BRL')
+            valor_dolar = float(r.json()['USDBRL']['bid'])
+            self._saldo = round(self.saldo * valor_dolar)
+            self._limite = round(self._limite * valor_dolar)
+
+    def transformar_saldo_de_real_para_dolar(self):
+        if self.moeda == 'real':
+            self.muda_saldo_e_limite()
+            self.troca_moeda()
             self.mostra_o_saldo()
         else:
             raise ValueError('O saldo já está em dólares.')
 
     def transformar_saldo_de_dolar_para_real(self):
-        r = requests.get('https://economia.awesomeapi.com.br/last/USD-BRL')
-        valor_dolar = float(r.json()['USDBRL']['bid'])
         if self.moeda == 'dolar':
-            self._saldo = round(self.saldo * valor_dolar)
-            self._limite = round(self._limite * valor_dolar)
-            self._moeda = 'real'
-            print(f'Saldo da conta convertido para reais!')
+            self.muda_saldo_e_limite()
+            self.troca_moeda()
             self.mostra_o_saldo()
         else:
             raise ValueError('O saldo já está em reais.')
