@@ -2,11 +2,11 @@ import requests
 
 
 class Conta:
-    def __init__(self, nome, numero, saldo=0, limite=1000):
+    def __init__(self, nome, numero, limite=1000):
         self._nome = self.formata_nome(nome.lower())
         self._numero = str(numero)
+        self._saldo = 0
         self._bandeira = self.valida_numero(self.numero)
-        self._saldo = saldo
         self._limite = limite
         self._agencia = 20
         self._moeda = 'real'
