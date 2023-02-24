@@ -10,14 +10,15 @@ class Conta:
         self._limite = limite
         self._agencia = 20
         self._moeda = 'real'
+        self._tipo = 'corrente'
 
     def __str__(self):
         if self._moeda == 'real':
-            return f'Titular: {self.nome}, Numero: {self.numero}, Bandeira: {self.bandeira}, ' \
-                   f'Saldo: R${self.saldo}, Limite: R${self.limite}, Agência: {self.agencia}'
+            return f'Titular: {self.nome}, Numero: {self.numero}, Bandeira: {self.bandeira} \n' \
+                   f'Saldo: R${self.saldo}, Limite: R${self.limite}, Agência: {self.agencia}, Conta: {self.tipo}'
         else:
-            return f'Titular: {self.nome}, Numero: {self.numero}, Bandeira: {self.bandeira}, ' \
-                   f'Saldo: ${self.saldo}, Limite: ${self.limite}, Agência: {self.agencia}'
+            return f'Titular: {self.nome}, Numero: {self.numero}, Bandeira: {self.bandeira} \n' \
+                   f'Saldo: ${self.saldo}, Limite: ${self.limite}, Agência: {self.agencia}, Conta: {self.tipo}'
 
     def __eq__(self, other):
         if self.numero == other.numero:
@@ -52,6 +53,10 @@ class Conta:
     @property
     def moeda(self):
         return self._moeda
+
+    @property
+    def tipo(self):
+        return self._tipo.title()
 
     @staticmethod
     def formata_nome(nome):
@@ -92,7 +97,10 @@ class Conta:
     def depositar_na_conta(self, valor):
         if valor > 0:
             self._saldo += valor
-            print(f'Depositado com sucesso na conta do titular: {self.nome}')
+            if self.moeda == 'real':
+                print(f'Depositado R${valor} com sucesso na conta do titular: {self.nome}')
+            else:
+                print(f'Depositado ${valor} com sucesso na conta do titular: {self.nome}')
         else:
             raise ValueError('Não se pode depositar este valor.')
 
@@ -106,14 +114,14 @@ class Conta:
             raise ValueError('O valor solicitado está indisponível.')
 
     def transferir_para_outra_conta(self, conta, valor):
-        if self.sacar_da_conta(valor):
-            if conta.moeda == self.moeda:
+        if not self.sacar_da_conta(valor):
+            if self.moeda == conta.moeda:
                 conta.depositar_na_conta(valor)
-            elif conta.moeda == 'dolar' and self.moeda == 'real':
+            elif self.moeda == 'dolar' and conta.moeda == 'real':
                 r = requests.get('https://economia.awesomeapi.com.br/last/USD-BRL')
                 valor_dolar = float(r.json()['USDBRL']['bid'])
                 conta.depositar_na_conta(round(valor/valor_dolar))
-            elif conta.moeda == 'real' and self.moeda == 'dolar':
+            elif self.moeda == 'real' and conta.moeda == 'dolar':
                 r = requests.get('https://economia.awesomeapi.com.br/last/BRL-USD')
                 valor_real_em_dolar = float(r.json()['BRLUSD']['bid'])
                 conta.depositar_na_conta(round(valor/valor_real_em_dolar))
