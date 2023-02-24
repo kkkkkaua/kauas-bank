@@ -13,10 +13,10 @@ class Conta:
 
     def __str__(self):
         if self._moeda == 'real':
-            return f'Cliente: {self.nome}, Numero: {self.formata_numero(self.numero)}, Bandeira: {self.bandeira}, ' \
+            return f'Cliente: {self.nome}, Numero: {self.numero}, Bandeira: {self.bandeira}, ' \
                    f'Saldo: R${self.saldo}, Limite: R${self.limite}, Agência: {self.agencia}'
         else:
-            return f'Cliente: {self.nome}, Numero: {self.formata_numero(self.numero)}, Bandeira: {self.bandeira}, ' \
+            return f'Cliente: {self.nome}, Numero: {self.numero}, Bandeira: {self.bandeira}, ' \
                    f'Saldo: ${self.saldo}, Limite: ${self.limite}, Agência: {self.agencia}'
 
     def __eq__(self, other):
@@ -39,7 +39,7 @@ class Conta:
 
     @property
     def numero(self):
-        return self._numero
+        return self.formata_numero(self._numero)
 
     @property
     def bandeira(self):
@@ -73,6 +73,7 @@ class Conta:
     @staticmethod
     def valida_numero(numero):
         numeros_validos = [14, 15, 16]
+        numero = numero.replace(' ', '')
         if numero[0] == '3' and len(numero) in numeros_validos:
             return 'American Express'
         elif numero[0] == '4' and len(numero) in numeros_validos:
