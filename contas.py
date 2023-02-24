@@ -135,7 +135,7 @@ class Conta:
     def transformar_saldo_de_dolar_para_real(self):
         r = requests.get('https://economia.awesomeapi.com.br/last/USD-BRL')
         valor_dolar = float(r.json()['USDBRL']['bid'])
-        if self._moeda == 'dolar':
+        if self.moeda == 'dolar':
             self._saldo = round(self.saldo * valor_dolar)
             self._limite = round(self._limite * valor_dolar)
             self._moeda = 'real'
