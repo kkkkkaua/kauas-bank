@@ -13,10 +13,10 @@ class Conta:
 
     def __str__(self):
         if self._moeda == 'real':
-            return f'Cliente: {self.nome}, Numero: {self.numero}, Bandeira: {self.bandeira}, ' \
+            return f'Titular: {self.nome}, Numero: {self.numero}, Bandeira: {self.bandeira}, ' \
                    f'Saldo: R${self.saldo}, Limite: R${self.limite}, Agência: {self.agencia}'
         else:
-            return f'Cliente: {self.nome}, Numero: {self.numero}, Bandeira: {self.bandeira}, ' \
+            return f'Titular: {self.nome}, Numero: {self.numero}, Bandeira: {self.bandeira}, ' \
                    f'Saldo: ${self.saldo}, Limite: ${self.limite}, Agência: {self.agencia}'
 
     def __eq__(self, other):
@@ -59,7 +59,7 @@ class Conta:
         nome_maiusculo = [nome.title() for nome in separa_nome]
         nome_inteiro = f''
         for nome in nome_maiusculo:
-            nome_inteiro = nome_inteiro + nome + ' '
+            nome_inteiro += nome + ' '
         return nome_inteiro.rstrip()
 
     @staticmethod
