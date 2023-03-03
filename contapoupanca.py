@@ -2,6 +2,8 @@ from contas import Conta
 
 
 class ContaPoupanca(Conta):
+    contas = Conta.contas
+
     def __init__(self, nome, numero, limite=1000):
         super().__init__(nome, numero)
         self._tipo = 'poupanca'

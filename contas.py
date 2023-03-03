@@ -2,6 +2,8 @@ import requests
 
 
 class Conta:
+    contas = []
+
     def __init__(self, nome, numero, limite=1000):
         self._nome = self.formata_nome(nome.lower())
         self._numero = str(numero)
@@ -11,6 +13,7 @@ class Conta:
         self._agencia = 20
         self._moeda = 'real'
         self._tipo = 'corrente'
+        Conta.adiciona_numero(numero)
 
     def __str__(self):
         if self._moeda == 'real':
@@ -69,24 +72,32 @@ class Conta:
 
     @staticmethod
     def formata_numero(numero):
-        primeira_parte = numero[0:4]
-        segunda_parte = numero[4:8]
-        terceira_parte = numero[8:12]
-        quarta_parte = numero[12:]
-        return f'{primeira_parte} {segunda_parte} {terceira_parte} {quarta_parte}'
+        if Conta.valida_numero(numero):
+            primeira_parte = numero[0:4]
+            segunda_parte = numero[4:8]
+            terceira_parte = numero[8:12]
+            quarta_parte = numero[12:]
+            return f'{primeira_parte} {segunda_parte} {terceira_parte} {quarta_parte}'
 
     @staticmethod
     def valida_numero(numero):
         numeros_validos = [14, 15, 16]
         numero = numero.replace(' ', '')
         if numero[0] == '3' and len(numero) in numeros_validos:
-            return 'American Express'
+            return 'American Express' and True
         elif numero[0] == '4' and len(numero) in numeros_validos:
-            return 'Visa'
+            return 'Visa' and True
         elif numero[0] == '5' and len(numero) in numeros_validos:
-            return 'Mastercard'
+            return 'Mastercard' and True
         else:
             raise ValueError('Número inválido.')
+
+    @staticmethod
+    def adiciona_numero(numero):
+        if not numero in Conta.contas:
+            Conta.contas.append(numero)
+        else:
+            raise ValueError('Já existe uma conta com esse número.')
 
     def mostra_o_saldo(self):
         if self.moeda == 'real':
